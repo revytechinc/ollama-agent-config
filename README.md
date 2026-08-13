@@ -8,24 +8,16 @@ The published artifact lives in `dist/` on this repo. A dedicated download host 
 
 ## Install
 
-Checksum verification is required. Fetch uses Python 3 (stdlib `urllib`); there is no `curl` dependency.
+One line: download the script and its checksum, verify, then run. There is no unverified `curl | sh`.
 
 ```sh
-BASE=https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main/dist
-python3 -c "
-import urllib.request
-base='$BASE'
-for name in ('install-ollama-agent-config.sh', 'install-ollama-agent-config.sh.sha256'):
-    urllib.request.urlretrieve(base + '/' + name, name)
-"
-sha256sum -c install-ollama-agent-config.sh.sha256
-sh ./install-ollama-agent-config.sh
+BASE=https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main/dist; curl -fsSL "$BASE/install-ollama-agent-config.sh" -o install-ollama-agent-config.sh && curl -fsSL "$BASE/install-ollama-agent-config.sh.sha256" | sha256sum -c && sh ./install-ollama-agent-config.sh
 ```
 
-Dry run (same files, after the checksum check above):
+Dry run:
 
 ```sh
-sh ./install-ollama-agent-config.sh --dry-run
+BASE=https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main/dist; curl -fsSL "$BASE/install-ollama-agent-config.sh" -o install-ollama-agent-config.sh && curl -fsSL "$BASE/install-ollama-agent-config.sh.sha256" | sha256sum -c && sh ./install-ollama-agent-config.sh --dry-run
 ```
 
 From a clone:
@@ -67,7 +59,7 @@ make test
 make dist
 ```
 
-Requires `python3` (3.11+). No `curl`, `jq`, or bash.
+The installer itself needs `python3` (3.11+). It does not call `curl`. The one-liner above uses `curl` only to download the published script and checksum.
 
 ## JetBrains IDE
 
