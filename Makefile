@@ -1,4 +1,4 @@
-.PHONY: test dist publish publish-nginx lint
+.PHONY: test dist lint
 
 test:
 	sh test/run.sh
@@ -8,10 +8,3 @@ dist:
 
 lint:
 	sh test/posix_lint.sh
-
-publish: dist
-	sh scripts/publish.sh
-
-publish-nginx: publish
-	@echo "Insert include after packages.conf if missing, then:"
-	@echo "  nginx -t && service nginx reload"
