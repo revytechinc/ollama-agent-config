@@ -70,6 +70,10 @@ make dist
 
 Requires `python3` (3.11+), `curl`. No `jq`, no bash.
 
+## License
+
+[BSD 3-Clause](LICENSE). Copyright (c) 2026 REVYTECH, Inc.
+
 ## JetBrains IDE
 
 GoLand / WebStorm: Settings → Tools → AI Assistant → Ollama at `http://127.0.0.1:11434`. This installer does not write IDE XML.
