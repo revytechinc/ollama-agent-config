@@ -11,7 +11,7 @@ curl -fsSL https://raw.githubusercontent.com/revytechinc/ollama-agent-config/mai
 - Discovers installed agents (Claude, Junie, Grok) unless you pass `--tools=`
 - Reads `GET $OLLAMA_HOST/api/tags` (default `http://127.0.0.1:11434`)
 - Skips embedding models
-- Writes Claude, Junie, and Grok configs for the remaining models
+- Configures **every remaining model** in Claude, Junie, and Grok
 - Backs up existing files first; `--prune` is opt-in
 
 ## Flags
@@ -21,8 +21,6 @@ curl -fsSL https://raw.githubusercontent.com/revytechinc/ollama-agent-config/mai
 --validate-only
 --tools=claude,junie,grok
 --ollama-host=http://127.0.0.1:11434
---prefer-cloud
---prefer-local
 --prune
 --live-probe
 ```
