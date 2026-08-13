@@ -1,9 +1,9 @@
 cba_endpoint_ok() {
   _host=$1
-  if curl -fsS --connect-timeout 3 --max-time 15 -o /dev/null "$_host/api/tags"; then
+  if cba_py fetch.py check "$_host/api/tags"; then
     return 0
   fi
-  curl -fsS --connect-timeout 3 --max-time 15 -o /dev/null "$_host/v1/models"
+  cba_py fetch.py check "$_host/v1/models"
 }
 
 cba_bin_version() {

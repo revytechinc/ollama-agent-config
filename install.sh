@@ -70,7 +70,6 @@ cba_main() {
   [ -n "$CBA_FABLE_MODEL" ] || CBA_FABLE_MODEL=${CLOUDBSD_FABLE_MODEL:-}
 
   cba_need_bin python3 "pkg install python3"
-  cba_need_bin curl "pkg install curl"
   cba_mkwork
   trap cba_cleanup EXIT INT TERM
 

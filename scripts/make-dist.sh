@@ -21,7 +21,7 @@ mkdir -p "$ROOT/dist"
   printf '%s\n' '    _CBA_PYDIR=${TMPDIR:-/tmp}/cba-py.$$'
   printf '%s\n' '    mkdir -p "$_CBA_PYDIR"'
   printf '%s\n' '    chmod 700 "$_CBA_PYDIR"'
-  for py in catalog.py json_util.py toml_upsert.py; do
+  for py in catalog.py json_util.py toml_upsert.py fetch.py; do
     printf '%s\n' "    cat > \"\$_CBA_PYDIR/$py\" <<'CBA_PY_${py}'"
     cat "$ROOT/lib/$py"
     printf '%s\n' "CBA_PY_${py}"

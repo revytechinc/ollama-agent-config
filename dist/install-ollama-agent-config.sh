@@ -1136,6 +1136,56 @@ if __name__ == "__main__":
     sys.exit(main())
 CBA_PY_toml_upsert.py
     chmod 700 "$_CBA_PYDIR/toml_upsert.py"
+    cat > "$_CBA_PYDIR/fetch.py" <<'CBA_PY_fetch.py'
+#!/usr/bin/env python3
+"""Thin urllib GET for catalog fetch and endpoint probes."""
+from __future__ import annotations
+
+import argparse
+import sys
+import urllib.error
+import urllib.request
+
+
+def get(url: str, out: str | None, bearer: str | None, timeout: float) -> int:
+    req = urllib.request.Request(url, method="GET")
+    if bearer:
+        req.add_header("Authorization", "Bearer " + bearer)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = resp.read()
+            if resp.status >= 400:
+                return 1
+            if out:
+                with open(out, "wb") as f:
+                    f.write(data)
+            return 0
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError):
+        return 1
+
+
+def main(argv: list[str] | None = None) -> int:
+    p = argparse.ArgumentParser(prog="fetch.py")
+    p.add_argument("cmd", choices=("get", "check"))
+    p.add_argument("url")
+    p.add_argument("--out")
+    p.add_argument("--bearer")
+    p.add_argument("--timeout", type=float, default=15.0)
+    args = p.parse_args(argv)
+    if args.cmd == "get":
+        if not args.out:
+            print("fetch.py get requires --out", file=sys.stderr)
+            return 2
+        return get(args.url, args.out, args.bearer, args.timeout)
+    if args.cmd == "check":
+        return get(args.url, None, args.bearer, args.timeout)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+CBA_PY_fetch.py
+    chmod 700 "$_CBA_PYDIR/fetch.py"
   fi
   printf "%s\n" "$_CBA_PYDIR/$_n"
 }
@@ -1326,15 +1376,14 @@ cba_linuxulator_ok() {
 # --- END 10-linuxulator.sh ---
 
 # --- BEGIN 20-discover.sh ---
-cba_curl_catalog() {
+cba_http_get() {
   _url=$1
   _out=$2
-  _hdrs=""
   if [ -n "${OLLAMA_API_KEY:-}" ]; then
-    _hdrs="-H Authorization: Bearer ${OLLAMA_API_KEY}"
+    cba_py fetch.py get "$_url" --out "$_out" --bearer "$OLLAMA_API_KEY"
+  else
+    cba_py fetch.py get "$_url" --out "$_out"
   fi
-  # shellcheck disable=SC2086
-  curl -fsS --connect-timeout 3 --max-time 15 -o "$_out" $_hdrs "$_url"
 }
 
 cba_discover() {
@@ -1344,10 +1393,10 @@ cba_discover() {
     cp "$CBA_CATALOG_FILE" "$CBA_TAGS" || cba_die "cannot read --catalog-file"
     return 0
   fi
-  if cba_curl_catalog "$CBA_HOST/api/tags" "$CBA_TAGS"; then
+  if cba_http_get "$CBA_HOST/api/tags" "$CBA_TAGS"; then
     return 0
   fi
-  if cba_curl_catalog "$CBA_HOST/v1/models" "$CBA_WORKDIR/v1models.json"; then
+  if cba_http_get "$CBA_HOST/v1/models" "$CBA_WORKDIR/v1models.json"; then
     python3 -c '
 import json,sys
 p=sys.argv[1]; o=sys.argv[2]
@@ -1461,10 +1510,10 @@ cba_backup_tar() {
 # --- BEGIN 50-validate.sh ---
 cba_endpoint_ok() {
   _host=$1
-  if curl -fsS --connect-timeout 3 --max-time 15 -o /dev/null "$_host/api/tags"; then
+  if cba_py fetch.py check "$_host/api/tags"; then
     return 0
   fi
-  curl -fsS --connect-timeout 3 --max-time 15 -o /dev/null "$_host/v1/models"
+  cba_py fetch.py check "$_host/v1/models"
 }
 
 cba_bin_version() {
@@ -1776,7 +1825,6 @@ cba_main() {
   [ -n "$CBA_FABLE_MODEL" ] || CBA_FABLE_MODEL=${CLOUDBSD_FABLE_MODEL:-}
 
   cba_need_bin python3 "pkg install python3"
-  cba_need_bin curl "pkg install curl"
   cba_mkwork
   trap cba_cleanup EXIT INT TERM
 

@@ -1,12 +1,11 @@
-cba_curl_catalog() {
+cba_http_get() {
   _url=$1
   _out=$2
-  _hdrs=""
   if [ -n "${OLLAMA_API_KEY:-}" ]; then
-    _hdrs="-H Authorization: Bearer ${OLLAMA_API_KEY}"
+    cba_py fetch.py get "$_url" --out "$_out" --bearer "$OLLAMA_API_KEY"
+  else
+    cba_py fetch.py get "$_url" --out "$_out"
   fi
-  # shellcheck disable=SC2086
-  curl -fsS --connect-timeout 3 --max-time 15 -o "$_out" $_hdrs "$_url"
 }
 
 cba_discover() {
@@ -16,10 +15,10 @@ cba_discover() {
     cp "$CBA_CATALOG_FILE" "$CBA_TAGS" || cba_die "cannot read --catalog-file"
     return 0
   fi
-  if cba_curl_catalog "$CBA_HOST/api/tags" "$CBA_TAGS"; then
+  if cba_http_get "$CBA_HOST/api/tags" "$CBA_TAGS"; then
     return 0
   fi
-  if cba_curl_catalog "$CBA_HOST/v1/models" "$CBA_WORKDIR/v1models.json"; then
+  if cba_http_get "$CBA_HOST/v1/models" "$CBA_WORKDIR/v1models.json"; then
     python3 -c '
 import json,sys
 p=sys.argv[1]; o=sys.argv[2]

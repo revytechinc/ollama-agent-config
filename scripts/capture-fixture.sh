@@ -2,16 +2,18 @@
 set -eu
 ROOT=$(CDPATH= cd "$(dirname "$0")/.." && pwd)
 HOST=${OLLAMA_HOST:-http://127.0.0.1:11434}
-curl -fsS "$HOST/api/tags" | python3 -c '
-import json,sys
-data=json.load(sys.stdin)
-out={"models":[]}
-for m in data.get("models",[]):
-    d=m.get("details") or {}
-    out["models"].append({
+python3 - "$HOST" "$ROOT/testdata/api-tags.fixture.json" <<'PY'
+import json, sys, urllib.request
+host, out = sys.argv[1], sys.argv[2]
+with urllib.request.urlopen(host.rstrip("/") + "/api/tags", timeout=15) as resp:
+    data = json.load(resp)
+models = []
+for m in data.get("models", []):
+    d = m.get("details") or {}
+    models.append({
         "name": m.get("name"),
         "model": m.get("model") or m.get("name"),
-        "size": m.get("size",0),
+        "size": m.get("size", 0),
         "modified_at": m.get("modified_at"),
         "capabilities": m.get("capabilities") or [],
         "details": {
@@ -20,6 +22,8 @@ for m in data.get("models",[]):
             "quantization_level": d.get("quantization_level"),
         },
     })
-print(json.dumps(out, indent=2))
-' > "$ROOT/testdata/api-tags.fixture.json"
-echo "updated testdata/api-tags.fixture.json"
+with open(out, "w", encoding="utf-8") as f:
+    json.dump({"models": models}, f, indent=2)
+    f.write("\n")
+print("updated", out)
+PY
