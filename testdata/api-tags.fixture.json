@@ -1,0 +1,1282 @@
+{
+  "models": [
+    {
+      "name": "muse-glimmer:30b",
+      "model": "muse-glimmer:30b",
+      "size": 18157010252,
+      "modified_at": "2026-08-11T19:06:59.747249832-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking",
+        "vision"
+      ],
+      "details": {
+        "family": "muse-glimmer",
+        "parameter_size": "27.9B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "nemotron3:33b-bf16",
+      "model": "nemotron3:33b-bf16",
+      "size": 66064505517,
+      "modified_at": "2026-06-20T00:35:53.733326125-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "nemotron_h_omni",
+        "parameter_size": "33.0B",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "nemotron3:33b-q8",
+      "model": "nemotron3:33b-q8",
+      "size": 36468496590,
+      "modified_at": "2026-06-20T00:35:09.753999361-05:00",
+      "capabilities": [
+        "audio",
+        "vision",
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "nemotron_h_omni",
+        "parameter_size": "33.0B",
+        "quantization_level": "Q8_0"
+      }
+    },
+    {
+      "name": "mistral-medium-3.5:128b",
+      "model": "mistral-medium-3.5:128b",
+      "size": 80241475099,
+      "modified_at": "2026-06-20T00:33:14.380142072-05:00",
+      "capabilities": [
+        "vision",
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "mistral3",
+        "parameter_size": "127.7B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "north-mini-code-1.0:bf16",
+      "model": "north-mini-code-1.0:bf16",
+      "size": 61004417950,
+      "modified_at": "2026-06-20T00:22:37.120403815-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "cohere2moe",
+        "parameter_size": "30.5B",
+        "quantization_level": "BF16"
+      }
+    },
+    {
+      "name": "granite4.1:8b",
+      "model": "granite4.1:8b",
+      "size": 5347933017,
+      "modified_at": "2026-06-20T00:18:35.534604915-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "granite",
+        "parameter_size": "8.8B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "glm-ocr:bf16",
+      "model": "glm-ocr:bf16",
+      "size": 2219299168,
+      "modified_at": "2026-06-20T00:11:54.023608033-05:00",
+      "capabilities": [
+        "vision",
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "glmocr",
+        "parameter_size": "1.1B",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "granite4.1:30b",
+      "model": "granite4.1:30b",
+      "size": 17490259354,
+      "modified_at": "2026-06-20T00:10:36.359026719-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "granite",
+        "parameter_size": "28.9B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "granite4.1-guardian:8b",
+      "model": "granite4.1-guardian:8b",
+      "size": 6879320213,
+      "modified_at": "2026-06-19T23:55:53.20831925-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "granite",
+        "parameter_size": "8.4B",
+        "quantization_level": "Q6_K"
+      }
+    },
+    {
+      "name": "granite4.1:3b",
+      "model": "granite4.1:3b",
+      "size": 2099520281,
+      "modified_at": "2026-06-19T23:53:54.113387367-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "granite",
+        "parameter_size": "3.4B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "kimi-k2.7-code:cloud",
+      "model": "kimi-k2.7-code:cloud",
+      "size": 388,
+      "modified_at": "2026-06-19T23:49:39.459348877-05:00",
+      "capabilities": [
+        "vision",
+        "thinking",
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "kimi",
+        "parameter_size": "1t",
+        "quantization_level": "int4"
+      }
+    },
+    {
+      "name": "glm-5.2:cloud",
+      "model": "glm-5.2:cloud",
+      "size": 338,
+      "modified_at": "2026-06-18T19:38:58.53355956-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "glm",
+        "parameter_size": "756b",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "glm-5.1:cloud",
+      "model": "glm-5.1:cloud",
+      "size": 327,
+      "modified_at": "2026-06-08T23:28:59.225343067-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "qwen3.5:397b-cloud",
+      "model": "qwen3.5:397b-cloud",
+      "size": 346,
+      "modified_at": "2026-06-08T23:28:58.868340365-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking",
+        "vision"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "qwen3.5:cloud",
+      "model": "qwen3.5:cloud",
+      "size": 346,
+      "modified_at": "2026-06-08T23:28:58.457337254-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking",
+        "vision"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "qwen3-coder-next:cloud",
+      "model": "qwen3-coder-next:cloud",
+      "size": 382,
+      "modified_at": "2026-06-08T23:28:56.641323507-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "qwen3next",
+        "parameter_size": "80B",
+        "quantization_level": "FP8"
+      }
+    },
+    {
+      "name": "ministral-3:14b-cloud",
+      "model": "ministral-3:14b-cloud",
+      "size": 395,
+      "modified_at": "2026-06-08T23:28:56.292320866-05:00",
+      "capabilities": [
+        "completion",
+        "vision",
+        "tools"
+      ],
+      "details": {
+        "family": "mistral3",
+        "parameter_size": "14000000000",
+        "quantization_level": "fp8"
+      }
+    },
+    {
+      "name": "ministral-3:3b-cloud",
+      "model": "ministral-3:3b-cloud",
+      "size": 392,
+      "modified_at": "2026-06-08T23:28:55.471314651-05:00",
+      "capabilities": [
+        "completion",
+        "vision",
+        "tools"
+      ],
+      "details": {
+        "family": "mistral3",
+        "parameter_size": "3000000000",
+        "quantization_level": "fp8"
+      }
+    },
+    {
+      "name": "ministral-3:8b-cloud",
+      "model": "ministral-3:8b-cloud",
+      "size": 392,
+      "modified_at": "2026-06-08T23:28:55.866317641-05:00",
+      "capabilities": [
+        "completion",
+        "vision",
+        "tools"
+      ],
+      "details": {
+        "family": "mistral3",
+        "parameter_size": "8000000000",
+        "quantization_level": "fp8"
+      }
+    },
+    {
+      "name": "devstral-small-2:24b-cloud",
+      "model": "devstral-small-2:24b-cloud",
+      "size": 405,
+      "modified_at": "2026-06-08T23:28:55.090311767-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "vision"
+      ],
+      "details": {
+        "family": "mistral3",
+        "parameter_size": "24000000000",
+        "quantization_level": "fp8"
+      }
+    },
+    {
+      "name": "qwen3-next:80b-cloud",
+      "model": "qwen3-next:80b-cloud",
+      "size": 340,
+      "modified_at": "2026-06-08T23:28:54.334306045-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "nemotron-3-super:cloud",
+      "model": "nemotron-3-super:cloud",
+      "size": 345,
+      "modified_at": "2026-06-08T23:28:54.710308891-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "nemotron-3-nano:30b-cloud",
+      "model": "nemotron-3-nano:30b-cloud",
+      "size": 418,
+      "modified_at": "2026-06-08T23:28:53.222297628-05:00",
+      "capabilities": [
+        "completion",
+        "thinking",
+        "tools"
+      ],
+      "details": {
+        "family": "nemotron_h_moe",
+        "parameter_size": "32000000000",
+        "quantization_level": "fp8"
+      }
+    },
+    {
+      "name": "rnj-1:8b-cloud",
+      "model": "rnj-1:8b-cloud",
+      "size": 367,
+      "modified_at": "2026-06-08T23:28:53.599300481-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "gemma3",
+        "parameter_size": "8000000000",
+        "quantization_level": "fp16"
+      }
+    },
+    {
+      "name": "kimi-k2.5:cloud",
+      "model": "kimi-k2.5:cloud",
+      "size": 340,
+      "modified_at": "2026-06-08T23:28:53.957303191-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking",
+        "vision"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "glm-5:cloud",
+      "model": "glm-5:cloud",
+      "size": 323,
+      "modified_at": "2026-06-08T23:28:52.85529485-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "minimax-m2.5:cloud",
+      "model": "minimax-m2.5:cloud",
+      "size": 337,
+      "modified_at": "2026-06-08T23:28:52.499292155-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "devstral-2:123b-cloud",
+      "model": "devstral-2:123b-cloud",
+      "size": 388,
+      "modified_at": "2026-06-08T23:28:50.200274753-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "mistral3",
+        "parameter_size": "123000000000",
+        "quantization_level": "fp8"
+      }
+    },
+    {
+      "name": "cogito-2.1:671b-cloud",
+      "model": "cogito-2.1:671b-cloud",
+      "size": 399,
+      "modified_at": "2026-06-08T23:28:49.358268379-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "deepseek2",
+        "parameter_size": "671.0B",
+        "quantization_level": "FP8_E4M3"
+      }
+    },
+    {
+      "name": "gemini-3-flash-preview:cloud",
+      "model": "gemini-3-flash-preview:cloud",
+      "size": 367,
+      "modified_at": "2026-06-08T23:28:49.797271702-05:00",
+      "capabilities": [
+        "completion",
+        "vision",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "deepseek-v3.2:cloud",
+      "model": "deepseek-v3.2:cloud",
+      "size": 397,
+      "modified_at": "2026-06-08T23:28:47.665255563-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "deepseek3.2",
+        "parameter_size": "671B",
+        "quantization_level": "fp8"
+      }
+    },
+    {
+      "name": "minimax-m2.1:cloud",
+      "model": "minimax-m2.1:cloud",
+      "size": 378,
+      "modified_at": "2026-06-08T23:28:46.402246002-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "minimax-m2",
+        "parameter_size": "230B",
+        "quantization_level": "fp16"
+      }
+    },
+    {
+      "name": "minimax-m2:cloud",
+      "model": "minimax-m2:cloud",
+      "size": 382,
+      "modified_at": "2026-06-08T23:28:46.780248864-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "minimaxm2",
+        "parameter_size": "230B",
+        "quantization_level": "FP8"
+      }
+    },
+    {
+      "name": "mistral-large-3:675b-cloud",
+      "model": "mistral-large-3:675b-cloud",
+      "size": 406,
+      "modified_at": "2026-06-08T23:28:40.350200189-05:00",
+      "capabilities": [
+        "completion",
+        "vision",
+        "tools"
+      ],
+      "details": {
+        "family": "mistral3",
+        "parameter_size": "675000000000",
+        "quantization_level": "fp8"
+      }
+    },
+    {
+      "name": "kimi-k2-thinking:cloud",
+      "model": "kimi-k2-thinking:cloud",
+      "size": 393,
+      "modified_at": "2026-06-08T23:28:40.722203005-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "deepseek2",
+        "parameter_size": "1T",
+        "quantization_level": "INT4"
+      }
+    },
+    {
+      "name": "qwen3-coder:480b-cloud",
+      "model": "qwen3-coder:480b-cloud",
+      "size": 382,
+      "modified_at": "2026-06-08T23:28:39.15219112-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "qwen3moe",
+        "parameter_size": "480B",
+        "quantization_level": "BF16"
+      }
+    },
+    {
+      "name": "gpt-oss:120b-cloud",
+      "model": "gpt-oss:120b-cloud",
+      "size": 384,
+      "modified_at": "2026-06-08T23:28:39.891196714-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "gptoss",
+        "parameter_size": "116.8B",
+        "quantization_level": "MXFP4"
+      }
+    },
+    {
+      "name": "qwen3-vl:235b-instruct-cloud",
+      "model": "qwen3-vl:235b-instruct-cloud",
+      "size": 400,
+      "modified_at": "2026-06-08T23:28:39.528193966-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "vision"
+      ],
+      "details": {
+        "family": "qwen3vl",
+        "parameter_size": "235B",
+        "quantization_level": "FP8"
+      }
+    },
+    {
+      "name": "deepseek-v3.1:671b-cloud",
+      "model": "deepseek-v3.1:671b-cloud",
+      "size": 405,
+      "modified_at": "2026-06-08T23:28:38.759188145-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "deepseek2",
+        "parameter_size": "671.0B",
+        "quantization_level": "FP8_E4M3"
+      }
+    },
+    {
+      "name": "glm-4.6:cloud",
+      "model": "glm-4.6:cloud",
+      "size": 366,
+      "modified_at": "2026-06-08T23:28:31.185130806-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "glm4",
+        "parameter_size": "355B",
+        "quantization_level": "FP8"
+      }
+    },
+    {
+      "name": "kimi-k2:1t-cloud",
+      "model": "kimi-k2:1t-cloud",
+      "size": 369,
+      "modified_at": "2026-06-08T23:28:27.232100878-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "deepseek2",
+        "parameter_size": "1T",
+        "quantization_level": "FP8"
+      }
+    },
+    {
+      "name": "gemma3:27b-cloud",
+      "model": "gemma3:27b-cloud",
+      "size": 374,
+      "modified_at": "2026-06-08T23:28:26.872098152-05:00",
+      "capabilities": [
+        "completion",
+        "vision"
+      ],
+      "details": {
+        "family": "gemma3",
+        "parameter_size": "27000000000",
+        "quantization_level": "bf16"
+      }
+    },
+    {
+      "name": "gemma4:31b-cloud",
+      "model": "gemma4:31b-cloud",
+      "size": 342,
+      "modified_at": "2026-06-08T23:28:26.506095381-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "vision",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "deepseek-v4-flash:cloud",
+      "model": "deepseek-v4-flash:cloud",
+      "size": 348,
+      "modified_at": "2026-06-08T23:28:21.346056315-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "kimi-k2.6:cloud",
+      "model": "kimi-k2.6:cloud",
+      "size": 384,
+      "modified_at": "2026-06-08T23:28:21.726059192-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking",
+        "vision"
+      ],
+      "details": {
+        "family": "kimi-k2",
+        "parameter_size": "1T",
+        "quantization_level": "int4"
+      }
+    },
+    {
+      "name": "minimax-m3:cloud",
+      "model": "minimax-m3:cloud",
+      "size": 362,
+      "modified_at": "2026-06-08T23:28:20.219047782-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking",
+        "vision"
+      ],
+      "details": {
+        "family": "minimax-m3",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "minimax-m2.7:cloud",
+      "model": "minimax-m2.7:cloud",
+      "size": 375,
+      "modified_at": "2026-06-08T23:28:20.585050554-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "minimax",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "deepseek-v4-pro:cloud",
+      "model": "deepseek-v4-pro:cloud",
+      "size": 344,
+      "modified_at": "2026-06-08T23:28:20.971053476-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "",
+        "parameter_size": "",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "nemotron-3-ultra:cloud",
+      "model": "nemotron-3-ultra:cloud",
+      "size": 389,
+      "modified_at": "2026-06-08T23:28:19.803044633-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "nemotron",
+        "parameter_size": "550b",
+        "quantization_level": ""
+      }
+    },
+    {
+      "name": "qwen3-embedding:8b",
+      "model": "qwen3-embedding:8b",
+      "size": 4676805193,
+      "modified_at": "2026-06-07T22:14:26.36807582-05:00",
+      "capabilities": [
+        "embedding"
+      ],
+      "details": {
+        "family": "qwen3",
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "nomic-embed-text:v1.5",
+      "model": "nomic-embed-text:v1.5",
+      "size": 274302450,
+      "modified_at": "2026-06-07T22:13:40.276693069-05:00",
+      "capabilities": [
+        "embedding"
+      ],
+      "details": {
+        "family": "nomic-bert",
+        "parameter_size": "137M",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "nomic-embed-text:latest",
+      "model": "nomic-embed-text:latest",
+      "size": 274302450,
+      "modified_at": "2026-06-06T20:31:32.205865198-05:00",
+      "capabilities": [
+        "embedding"
+      ],
+      "details": {
+        "family": "nomic-bert",
+        "parameter_size": "137M",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "qwen3.6:35b",
+      "model": "qwen3.6:35b",
+      "size": 23938333577,
+      "modified_at": "2026-04-28T23:18:12.644952831-05:00",
+      "capabilities": [
+        "vision",
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "qwen35moe",
+        "parameter_size": "36.0B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "qwen3.6:latest",
+      "model": "qwen3.6:latest",
+      "size": 23938333577,
+      "modified_at": "2026-04-28T02:25:34.619351422-05:00",
+      "capabilities": [
+        "vision",
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "qwen35moe",
+        "parameter_size": "36.0B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "qwen2.5-coder:latest",
+      "model": "qwen2.5-coder:latest",
+      "size": 4683087561,
+      "modified_at": "2026-04-20T19:17:28.458364891-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "insert"
+      ],
+      "details": {
+        "family": "qwen2",
+        "parameter_size": "7.6B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "gemma4:31b-it-q4_K_M",
+      "model": "gemma4:31b-it-q4_K_M",
+      "size": 19868981791,
+      "modified_at": "2026-04-14T23:47:31.301420809-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "gemma4",
+        "parameter_size": "31.3B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "gemma4:e2b-it-bf16",
+      "model": "gemma4:e2b-it-bf16",
+      "size": 10294853563,
+      "modified_at": "2026-04-14T23:47:12.79929913-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "gemma4",
+        "parameter_size": "5.1B",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "gemma4:31b-it-q8_0",
+      "model": "gemma4:31b-it-q8_0",
+      "size": 33834625565,
+      "modified_at": "2026-04-14T23:41:52.085147588-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "gemma4",
+        "parameter_size": "31.3B",
+        "quantization_level": "Q8_0"
+      }
+    },
+    {
+      "name": "gemma4:31b-it-bf16",
+      "model": "gemma4:31b-it-bf16",
+      "size": 62612138460,
+      "modified_at": "2026-04-14T23:40:37.009628743-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "gemma4",
+        "parameter_size": "31.3B",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "llama2:latest",
+      "model": "llama2:latest",
+      "size": 3826793677,
+      "modified_at": "2026-04-02T02:03:41.693906061-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "7B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "bge-m3:latest",
+      "model": "bge-m3:latest",
+      "size": 1157672605,
+      "modified_at": "2026-04-02T01:16:11.028693834-05:00",
+      "capabilities": [
+        "embedding"
+      ],
+      "details": {
+        "family": "bert",
+        "parameter_size": "566.70M",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "mxbai-embed-large:latest",
+      "model": "mxbai-embed-large:latest",
+      "size": 669615493,
+      "modified_at": "2026-04-02T01:15:41.283410196-05:00",
+      "capabilities": [
+        "embedding"
+      ],
+      "details": {
+        "family": "bert",
+        "parameter_size": "334M",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "all-minilm:latest",
+      "model": "all-minilm:latest",
+      "size": 45960996,
+      "modified_at": "2026-04-02T01:15:16.911173712-05:00",
+      "capabilities": [
+        "embedding"
+      ],
+      "details": {
+        "family": "bert",
+        "parameter_size": "23M",
+        "quantization_level": "F16"
+      }
+    },
+    {
+      "name": "gpt-oss:120b",
+      "model": "gpt-oss:120b",
+      "size": 65369818941,
+      "modified_at": "2026-03-19T21:46:50.014894927-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "gptoss",
+        "parameter_size": "116.8B",
+        "quantization_level": "MXFP4"
+      }
+    },
+    {
+      "name": "wizardcoder:33b",
+      "model": "wizardcoder:33b",
+      "size": 18819451500,
+      "modified_at": "2026-03-19T21:44:21.228422888-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "33B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "exaone-deep:32b",
+      "model": "exaone-deep:32b",
+      "size": 19343762945,
+      "modified_at": "2026-03-19T21:42:55.245935721-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "exaone",
+        "parameter_size": "32.0B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "llama2-uncensored:70b",
+      "model": "llama2-uncensored:70b",
+      "size": 38872261672,
+      "modified_at": "2026-03-19T21:42:14.657215903-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "65B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "codeqwen:7b",
+      "model": "codeqwen:7b",
+      "size": 4179438533,
+      "modified_at": "2026-03-19T21:37:19.331521903-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "qwen2",
+        "parameter_size": "7.3B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "yi-coder:9b",
+      "model": "yi-coder:9b",
+      "size": 5037007607,
+      "modified_at": "2026-03-19T21:37:06.625254349-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "8.8B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "gemma2:27b",
+      "model": "gemma2:27b",
+      "size": 15628387458,
+      "modified_at": "2026-03-19T21:29:48.131141931-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "gemma2",
+        "parameter_size": "27.2B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "phi3:14b",
+      "model": "phi3:14b",
+      "size": 7897127458,
+      "modified_at": "2026-03-19T21:25:58.266010564-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "phi3",
+        "parameter_size": "14.0B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "mistral-nemo:latest",
+      "model": "mistral-nemo:latest",
+      "size": 7071713227,
+      "modified_at": "2026-03-19T21:25:23.799581362-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "12.2B",
+        "quantization_level": "Q4_0"
+      }
+    },
+    {
+      "name": "opencoder:latest",
+      "model": "opencoder:latest",
+      "size": 4736066175,
+      "modified_at": "2026-03-19T21:23:59.620803409-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "7.8B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "llama3.2:1b",
+      "model": "llama3.2:1b",
+      "size": 1321098329,
+      "modified_at": "2026-03-19T21:17:58.102584475-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "1.2B",
+        "quantization_level": "Q8_0"
+      }
+    },
+    {
+      "name": "qwen3-coder-next:latest",
+      "model": "qwen3-coder-next:latest",
+      "size": 51741611823,
+      "modified_at": "2026-03-19T17:33:15.266419763-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "qwen3next",
+        "parameter_size": "79.7B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "qwen2.5-coder:14b",
+      "model": "qwen2.5-coder:14b",
+      "size": 8988124298,
+      "modified_at": "2026-03-19T17:33:15.268512986-05:00",
+      "capabilities": [
+        "completion",
+        "tools",
+        "insert"
+      ],
+      "details": {
+        "family": "qwen2",
+        "parameter_size": "14.8B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "qwen3-coder-next:q8_0",
+      "model": "qwen3-coder-next:q8_0",
+      "size": 84812676525,
+      "modified_at": "2026-03-19T17:33:15.266501364-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "qwen3next",
+        "parameter_size": "79.7B",
+        "quantization_level": "Q8_0"
+      }
+    },
+    {
+      "name": "qwen3-coder:30b",
+      "model": "qwen3-coder:30b",
+      "size": 18556700761,
+      "modified_at": "2026-03-19T17:33:15.269300313-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "qwen3moe",
+        "parameter_size": "30.5B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "qwen3-coder:480b",
+      "model": "qwen3-coder:480b",
+      "size": 290058836445,
+      "modified_at": "2026-03-19T17:33:15.268911761-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "qwen3moe",
+        "parameter_size": "480.2B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "llama3.2:latest",
+      "model": "llama3.2:latest",
+      "size": 2019393189,
+      "modified_at": "2026-03-19T17:33:15.267400965-05:00",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "3.2B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "qwen3.5:latest",
+      "model": "qwen3.5:latest",
+      "size": 6594474711,
+      "modified_at": "2026-03-19T17:33:15.26830079-05:00",
+      "capabilities": [
+        "vision",
+        "completion",
+        "tools",
+        "thinking"
+      ],
+      "details": {
+        "family": "qwen35",
+        "parameter_size": "9.7B",
+        "quantization_level": "Q4_K_M"
+      }
+    },
+    {
+      "name": "deepseek-coder:33b",
+      "model": "deepseek-coder:33b",
+      "size": 18819456424,
+      "modified_at": "2026-03-19T17:33:15.269511437-05:00",
+      "capabilities": [
+        "completion"
+      ],
+      "details": {
+        "family": "llama",
+        "parameter_size": "33B",
+        "quantization_level": "Q4_0"
+      }
+    }
+  ]
+}

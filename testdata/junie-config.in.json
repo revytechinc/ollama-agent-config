@@ -1,0 +1,5 @@
+{
+  "model": "custom:ollama",
+  "model-default-locations": true,
+  "auto-update": true
+}

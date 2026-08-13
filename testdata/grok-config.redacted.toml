@@ -1,0 +1,44 @@
+[cli]
+installer = "internal"
+
+[[marketplace.sources]]
+name = "example"
+git = "https://example.invalid/marketplace.git"
+
+[mcp_servers.dummy]
+url = "https://example.invalid/"
+enabled = true
+
+[mcp_servers.dummy.headers]
+Authorization = "Bearer REDACTED"
+
+[model.minimax-direct-m3]
+model = "MiniMax-M3"
+api_key = "REDACTED"
+api_backend = "messages"
+
+[model.minimax-direct-m3.extra_headers]
+anthropic-version = "2023-06-01"
+
+[model.ollama-nginx-qwen3-5-cloud]
+model = "qwen3.5:cloud"
+base_url = "http://127.0.0.1:11434/v1"
+
+[model."grok-4.5"]
+model = "grok-4.5"
+
+[model.ollama-direct-granite4-1-8b]
+model = "granite4.1:8b"
+name = "granite4.1:8b (Ollama direct)"
+base_url = "http://127.0.0.1:11434/v1"
+api_key = "ollama"
+
+[model.ollama-direct-nomic-embed-text-latest]
+model = "nomic-embed-text:latest"
+name = "nomic-embed-text:latest (Ollama direct)"
+base_url = "http://127.0.0.1:11434/v1"
+api_key = "ollama"
+
+[models]
+default = "grok-4-fast-non-reasoning"
+default_reasoning_effort = "xhigh"
