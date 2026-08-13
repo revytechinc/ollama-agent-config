@@ -4,8 +4,8 @@ ROOT=$(CDPATH= cd "$(dirname "$0")/.." && pwd)
 DESTDIR=${DESTDIR:-/usr/local/www/install}
 echo "Installing to $DESTDIR (needs write access)"
 install -d -m 755 "$DESTDIR"
-install -m 644 "$ROOT/dist/install-ollama-agents.sh" "$DESTDIR/install-ollama-agents.sh"
-install -m 644 "$ROOT/dist/install-ollama-agents.sh.sha256" "$DESTDIR/install-ollama-agents.sh.sha256"
+install -m 644 "$ROOT/dist/install-ollama-agent-config.sh" "$DESTDIR/install-ollama-agent-config.sh"
+install -m 644 "$ROOT/dist/install-ollama-agent-config.sh.sha256" "$DESTDIR/install-ollama-agent-config.sh.sha256"
 SNIP=/usr/local/etc/nginx/snippets/install-scripts.conf
 if [ -w /usr/local/etc/nginx/snippets ] || [ "$(id -u)" -eq 0 ]; then
   install -m 644 "$ROOT/nginx/install-scripts.conf" "$SNIP"

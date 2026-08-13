@@ -40,7 +40,7 @@ cba_die() {
 
 cba_usage() {
   cat <<'EOF'
-install-ollama-agents.sh [options]
+install-ollama-agent-config.sh [options]
 
   --help
   --dry-run                 print plan; write nothing

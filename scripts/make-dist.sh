@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 ROOT=$(CDPATH= cd "$(dirname "$0")/.." && pwd)
-DEST="$ROOT/dist/install-ollama-agents.sh"
+DEST="$ROOT/dist/install-ollama-agent-config.sh"
 mkdir -p "$ROOT/dist"
 
 {
@@ -56,7 +56,7 @@ mkdir -p "$ROOT/dist"
     skip && /^fi$/ {skip=0; next}
     skip {next}
     /^#!\/bin\/sh/ {next}
-    /^# cloudbsd-ollama-agents/ {next}
+    /^# ollama-agent-config/ {next}
     /^set -eu/ {next}
     /^\( set -o pipefail/ {next}
     {print}
@@ -64,6 +64,6 @@ mkdir -p "$ROOT/dist"
 } > "$DEST"
 
 chmod 755 "$DEST"
-( cd "$ROOT/dist" && sha256sum install-ollama-agents.sh > install-ollama-agents.sh.sha256 )
+( cd "$ROOT/dist" && sha256sum install-ollama-agent-config.sh > install-ollama-agent-config.sh.sha256 )
 sh "$ROOT/scripts/secret-scan.sh" "$DEST"
 echo "wrote $DEST"

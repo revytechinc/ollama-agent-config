@@ -1,5 +1,5 @@
 #!/bin/sh
-# cloudbsd-ollama-agents — configure Claude Code, Junie, and Grok for Ollama.
+# ollama-agent-config — configure Claude Code, Junie, and Grok for Ollama.
 set -eu
 # pipefail is supported on this host's /bin/sh
 ( set -o pipefail ) 2>/dev/null && set -o pipefail
