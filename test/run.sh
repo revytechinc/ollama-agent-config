@@ -5,6 +5,7 @@ fail=0
 for t in \
   "$ROOT/test/posix_lint.sh" \
   "$ROOT/test/fetch_test.sh" \
+  "$ROOT/test/bootstrap_test.sh" \
   "$ROOT/test/discover_test.sh" \
   "$ROOT/test/classify_test.sh" \
   "$ROOT/test/claude_merge_test.sh" \

@@ -49,11 +49,11 @@ mkdir -p "$ROOT/dist"
     printf '\n'
   done
 
-  # install.sh body without the repo-mode source block
+  # install.sh body without the repo-only bootstrap/source block
   awk '
     BEGIN {skip=0}
-    /^if \[ -z "\$\{CBA_DIST:-\}" \]; then/ {skip=1; next}
-    skip && /^fi$/ {skip=0; next}
+    /^# --- CBA_REPO_BEGIN ---/ {skip=1; next}
+    /^# --- CBA_REPO_END ---/ {skip=0; next}
     skip {next}
     /^#!\/bin\/sh/ {next}
     /^# ollama-agent-config/ {next}

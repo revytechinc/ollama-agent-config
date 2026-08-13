@@ -4,11 +4,40 @@ set -eu
 # pipefail is supported on this host's /bin/sh
 ( set -o pipefail ) 2>/dev/null && set -o pipefail
 
+# --- CBA_REPO_BEGIN ---
 if [ -z "${CBA_DIST:-}" ]; then
   case "$0" in
     /*) CBA_ROOT=$(dirname "$0") ;;
-    *) CBA_ROOT=$(CDPATH= cd "$(dirname "$0")" && pwd) ;;
+    *) CBA_ROOT=$(CDPATH= cd "$(dirname "$0")" 2>/dev/null && pwd) || CBA_ROOT="" ;;
   esac
+  if [ ! -f "$CBA_ROOT/lib/00-posix.sh" ]; then
+    # curl | sh: fetch the release payload, verify sha256, then exec it.
+    if ! command -v python3 >/dev/null 2>&1; then
+      echo "error: python3 is required (pkg install python3)" >&2
+      exit 1
+    fi
+    CBA_INSTALL_BASE=${CBA_INSTALL_BASE:-https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main}
+    _cba_tmp=$(mktemp -d) || exit 1
+    _cba_payload=$(python3 - "$CBA_INSTALL_BASE" "$_cba_tmp" <<'PY'
+import hashlib, pathlib, sys, urllib.request
+
+base = sys.argv[1].rstrip("/")
+dest = pathlib.Path(sys.argv[2])
+name = "install-ollama-agent-config.sh"
+script = dest / name
+chk = dest / (name + ".sha256")
+urllib.request.urlretrieve(base + "/dist/" + name, script)
+urllib.request.urlretrieve(base + "/dist/" + name + ".sha256", chk)
+expected = chk.read_text(encoding="utf-8").split()[0].lower()
+got = hashlib.sha256(script.read_bytes()).hexdigest()
+if expected != got:
+    sys.stderr.write("error: checksum mismatch for %s\n" % name)
+    sys.exit(1)
+print(script)
+PY
+) || exit 1
+    exec sh "$_cba_payload" "$@"
+  fi
   . "$CBA_ROOT/lib/00-posix.sh"
   . "$CBA_ROOT/lib/10-linuxulator.sh"
   . "$CBA_ROOT/lib/20-discover.sh"
@@ -19,6 +48,7 @@ if [ -z "${CBA_DIST:-}" ]; then
   . "$CBA_ROOT/adapters/junie.sh"
   . "$CBA_ROOT/adapters/grok.sh"
 fi
+# --- CBA_REPO_END ---
 
 cba_detect_tools() {
   _list=""
