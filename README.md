@@ -4,29 +4,24 @@ POSIX installer that discovers whatever models an Ollama-compatible endpoint cur
 
 Repository: [revytechinc/ollama-agent-config](https://github.com/revytechinc/ollama-agent-config)
 
-Published (after `make publish`) at:
+The published artifact lives in `dist/` on this repo. A dedicated download host can replace the `BASE` URL later.
 
-`https://freedev007.cloudbsd.org/install-ollama-agent-config.sh`
+## Install
 
-## Safe install
+Checksum verification is required. There is no `curl | sh` path.
 
 ```sh
-curl -fsSL https://freedev007.cloudbsd.org/install-ollama-agent-config.sh -o install-ollama-agent-config.sh
-curl -fsSL https://freedev007.cloudbsd.org/install-ollama-agent-config.sh.sha256 -o install-ollama-agent-config.sh.sha256
+BASE=https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main/dist
+curl -fsSL "$BASE/install-ollama-agent-config.sh" -o install-ollama-agent-config.sh
+curl -fsSL "$BASE/install-ollama-agent-config.sh.sha256" -o install-ollama-agent-config.sh.sha256
 sha256sum -c install-ollama-agent-config.sh.sha256
 sh ./install-ollama-agent-config.sh
 ```
 
-Convenience (no checksum):
+Dry run (same files, after the checksum check above):
 
 ```sh
-curl -fsSL https://freedev007.cloudbsd.org/install-ollama-agent-config.sh | sh
-```
-
-Dry run:
-
-```sh
-curl -fsSL https://freedev007.cloudbsd.org/install-ollama-agent-config.sh | sh -s -- --dry-run
+sh ./install-ollama-agent-config.sh --dry-run
 ```
 
 From a clone:
@@ -70,10 +65,10 @@ make dist
 
 Requires `python3` (3.11+), `curl`. No `jq`, no bash.
 
-## License
-
-[BSD 3-Clause](LICENSE). Copyright (c) 2026 REVYTECH, Inc.
-
 ## JetBrains IDE
 
 GoLand / WebStorm: Settings → Tools → AI Assistant → Ollama at `http://127.0.0.1:11434`. This installer does not write IDE XML.
+
+## License
+
+[BSD 3-Clause](LICENSE). Copyright (c) 2026 REVYTECH, Inc.
