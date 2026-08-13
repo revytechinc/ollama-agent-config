@@ -6,30 +6,19 @@ Configures **Claude Code**, **Junie**, and **Grok Build** to use your Ollama mod
 curl -fsSL https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main/install.sh | sh
 ```
 
-```sh
-curl -fsSL https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main/install.sh | sh -s -- --dry-run
-```
+That downloads the release script, checks its SHA-256, then runs it. Add flags after `sh -s --`, for example `--dry-run`.
 
-The piped `install.sh` downloads the release script, checks its SHA-256, then runs it.
-
-## From a clone
-
-```sh
-git clone git@github.com:revytechinc/ollama-agent-config.git
-cd ollama-agent-config
-sh install.sh --dry-run
-```
+From a clone: `sh install.sh`.
 
 ## What it does
 
+- Discovers installed agents (Claude, Junie, Grok) unless you pass `--tools=`
 - Reads `GET $OLLAMA_HOST/api/tags` (default `http://127.0.0.1:11434`)
-- Drops embeddings
-- Upserts Claude `~/.claude/settings.json` (Anthropic Messages base URL **without** `/v1`)
-- Rewrites Junie `~/.junie/models/*.json` (OpenAI Chat Completions **full** `/v1/chat/completions`)
-- Surgically upserts only `[model.ollama-direct-*]` in `~/.grok/config.toml` (OpenAI `/v1`)
-- Always backups first. `--prune` is opt-in and runs only after every selected adapter succeeded.
+- Skips embedding models
+- Writes Claude, Junie, and Grok configs for the remaining models
+- Backs up existing files first; `--prune` is opt-in
 
-## Common flags
+## Flags
 
 ```
 --dry-run
