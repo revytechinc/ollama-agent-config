@@ -4,6 +4,7 @@ ROOT=$(CDPATH= cd "$(dirname "$0")/.." && pwd)
 fail=0
 for t in \
   "$ROOT/test/posix_lint.sh" \
+  "$ROOT/test/python_test.sh" \
   "$ROOT/test/fetch_test.sh" \
   "$ROOT/test/bootstrap_test.sh" \
   "$ROOT/test/discover_test.sh" \

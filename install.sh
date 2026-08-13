@@ -4,6 +4,31 @@ set -eu
 # pipefail is supported on this host's /bin/sh
 ( set -o pipefail ) 2>/dev/null && set -o pipefail
 
+cba_need_python() {
+  if command -v python3 >/dev/null 2>&1; then
+    return 0
+  fi
+  _os=$(uname -s 2>/dev/null || echo unknown)
+  case "$_os" in
+    FreeBSD) _hint="pkg install python3" ;;
+    Darwin) _hint="brew install python3" ;;
+    Linux)
+      if command -v apt-get >/dev/null 2>&1; then
+        _hint="sudo apt-get install python3"
+      elif command -v dnf >/dev/null 2>&1; then
+        _hint="sudo dnf install python3"
+      else
+        _hint="install python3 with your package manager"
+      fi
+      ;;
+    *) _hint="install python3 with your package manager" ;;
+  esac
+  echo "error: python3 is not installed." >&2
+  echo "Install it with: $_hint" >&2
+  echo "Then re-run this installer." >&2
+  exit 1
+}
+
 # --- CBA_REPO_BEGIN ---
 if [ -z "${CBA_DIST:-}" ]; then
   case "$0" in
@@ -12,10 +37,7 @@ if [ -z "${CBA_DIST:-}" ]; then
   esac
   if [ ! -f "$CBA_ROOT/lib/00-posix.sh" ]; then
     # curl | sh: fetch the release payload, verify sha256, then exec it.
-    if ! command -v python3 >/dev/null 2>&1; then
-      echo "error: python3 is required (pkg install python3)" >&2
-      exit 1
-    fi
+    cba_need_python
     CBA_INSTALL_BASE=${CBA_INSTALL_BASE:-https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main}
     _cba_tmp=$(mktemp -d) || exit 1
     _cba_payload=$(python3 - "$CBA_INSTALL_BASE" "$_cba_tmp" <<'PY'
@@ -99,7 +121,7 @@ cba_main() {
   [ -n "$CBA_OPUS_MODEL" ] || CBA_OPUS_MODEL=${CLOUDBSD_OPUS_MODEL:-}
   [ -n "$CBA_FABLE_MODEL" ] || CBA_FABLE_MODEL=${CLOUDBSD_FABLE_MODEL:-}
 
-  cba_need_bin python3 "pkg install python3"
+  cba_need_python
   cba_mkwork
   trap cba_cleanup EXIT INT TERM
 
