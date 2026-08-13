@@ -8,6 +8,7 @@ for t in \
   "$ROOT/test/bootstrap_test.sh" \
   "$ROOT/test/discover_test.sh" \
   "$ROOT/test/classify_test.sh" \
+  "$ROOT/test/dedupe_test.sh" \
   "$ROOT/test/claude_merge_test.sh" \
   "$ROOT/test/junie_merge_test.sh" \
   "$ROOT/test/toml_upsert_unit.sh" \

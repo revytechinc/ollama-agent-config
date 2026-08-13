@@ -77,16 +77,24 @@ def _dump(obj: object) -> str:
     return json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
 
 
-def stable_merge_available(existing: list, completion: list[str], skip: list[str]) -> list[str]:
+def stable_merge_available(
+    existing: list,
+    completion: list[str],
+    skip: list[str],
+    collapsed: dict[str, str] | None = None,
+) -> list[str]:
     alias_set = set(ALIASES)
     skip_set = set(skip)
     completion_set = set(completion)
+    collapsed = collapsed or {}
     out: list[str] = list(ALIASES)
     seen = set(out)
     for name in existing:
         if not isinstance(name, str):
             continue
         if name in alias_set:
+            continue
+        if name in collapsed:
             continue
         if name in skip_set or is_skip(name, []):
             continue
@@ -95,7 +103,7 @@ def stable_merge_available(existing: list, completion: list[str], skip: list[str
                 out.append(name)
                 seen.add(name)
     for name in completion:
-        if name not in seen and name not in alias_set:
+        if name not in seen and name not in alias_set and name not in collapsed:
             out.append(name)
             seen.add(name)
     return out
@@ -111,7 +119,10 @@ def merge_claude(existing: dict, env_updates: dict, models: dict) -> dict:
     if not isinstance(prev, list):
         prev = []
     out["availableModels"] = stable_merge_available(
-        prev, models.get("completion") or [], models.get("skip") or []
+        prev,
+        models.get("completion") or [],
+        models.get("skip") or [],
+        models.get("aliases") or {},
     )
     return out
 
@@ -211,24 +222,35 @@ def cmd_merge_junie_config(args) -> int:
 
 def cmd_write_junie_all(args) -> int:
     tags = json.loads(Path(args.tags).read_text(encoding="utf-8"))
-    cls = json.loads(Path(args.models_json).read_text(encoding="utf-8"))
-    models = load_models(tags)
+    dest = Path(args.models_dir)
+    dest.mkdir(parents=True, exist_ok=True)
+    existing_ids = []
+    for p in dest.glob("*.json"):
+        try:
+            mid = json.loads(p.read_text(encoding="utf-8")).get("id")
+        except (OSError, json.JSONDecodeError):
+            continue
+        if isinstance(mid, str):
+            existing_ids.append(mid)
+    models, aliases = load_models(tags, existing_ids)
     from catalog import completion_models
 
     comp = completion_models(models)
-    dest = Path(args.models_dir)
-    dest.mkdir(parents=True, exist_ok=True)
     written = 0
-    for name in cls.get("completion") or []:
+    keep_files = {"ollama.json", "ollama-local.json"}
+    for row in comp:
+        name = row["name"]
         faster = faster_for_profile(name, args.haiku, comp)
-        merge_path = dest / (junie_slug(name) + ".json")
+        fname = junie_slug(name) + ".json"
+        keep_files.add(fname)
         _atomic_write(
-            merge_path,
+            dest / fname,
             _dump(merge_junie_profile({}, name, args.base_url, faster)),
             0o644,
         )
         written += 1
     for fname, mid in (("ollama.json", args.primary), ("ollama-local.json", args.local)):
+        mid = aliases.get(mid, mid)
         faster = faster_for_profile(mid, args.haiku, comp)
         _atomic_write(
             dest / fname,
@@ -236,6 +258,15 @@ def cmd_write_junie_all(args) -> int:
             0o644,
         )
         written += 1
+    for p in dest.glob("*.json"):
+        if p.name in keep_files:
+            continue
+        try:
+            mid = json.loads(p.read_text(encoding="utf-8")).get("id")
+        except (OSError, json.JSONDecodeError):
+            continue
+        if mid in aliases:
+            p.unlink()
     print(f"junie: rewrite {written} managed profiles")
     return 0
 

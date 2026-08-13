@@ -1,6 +1,15 @@
 cba_classify() {
   CBA_CLASS="$CBA_WORKDIR/class.json"
+  CBA_PREF="$CBA_WORKDIR/prefer-names.json"
+  cba_py catalog.py gather-names \
+    --claude "${CBA_CLAUDE_SETTINGS:-$HOME/.claude/settings.json}" \
+    --junie-dir "${CBA_JUNIE_HOME:-$HOME/.junie}/models" \
+    --grok "${CBA_GROK_CONFIG:-$HOME/.grok/config.toml}" \
+    --out "$CBA_PREF" || true
   set -- classify --tags "$CBA_TAGS" --out "$CBA_CLASS"
+  if [ -s "$CBA_PREF" ]; then
+    set -- "$@" --prefer-names "$CBA_PREF"
+  fi
   if [ "$CBA_PREFER_CLOUD" -eq 1 ]; then
     set -- "$@" --prefer-cloud
   fi

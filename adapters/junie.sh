@@ -12,7 +12,8 @@ from catalog import faster_for_profile, load_models, completion_models
 tags=json.load(open(sys.argv[2]))
 haiku=sys.argv[3]
 pid=sys.argv[4]
-comp=completion_models(load_models(tags))
+_models,_aliases=load_models(tags)
+comp=completion_models(_models)
 print(faster_for_profile(pid, haiku, comp))
 ' "${CBA_ROOT:-$CBA_WORKDIR}/lib" "$CBA_TAGS" "$CBA_ROLE_HAIKU" "$1"
 }

@@ -13,6 +13,7 @@ for m in data.get("models", []):
     models.append({
         "name": m.get("name"),
         "model": m.get("model") or m.get("name"),
+        "digest": m.get("digest") or "",
         "size": m.get("size", 0),
         "modified_at": m.get("modified_at"),
         "capabilities": m.get("capabilities") or [],

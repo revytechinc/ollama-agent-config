@@ -1,0 +1,51 @@
+{
+  "models": [
+    {
+      "name": "qwen3.6:35b",
+      "digest": "digest-qwen36",
+      "capabilities": ["completion", "tools"],
+      "details": {"parameter_size": "35B"},
+      "modified_at": "2026-01-01T00:00:00Z"
+    },
+    {
+      "name": "qwen3.6:latest",
+      "digest": "digest-qwen36",
+      "capabilities": ["completion", "tools"],
+      "details": {"parameter_size": "35B"},
+      "modified_at": "2026-01-01T00:00:00Z"
+    },
+    {
+      "name": "qwen3.5:397b-cloud",
+      "digest": "digest-qwen35cloud",
+      "capabilities": ["completion", "tools"],
+      "details": {"parameter_size": "397B"},
+      "modified_at": "2026-01-02T00:00:00Z"
+    },
+    {
+      "name": "qwen3.5:cloud",
+      "digest": "digest-qwen35cloud",
+      "capabilities": ["completion", "tools"],
+      "details": {"parameter_size": "397B"},
+      "modified_at": "2026-01-02T00:00:00Z"
+    },
+    {
+      "name": "unique-coder:7b",
+      "digest": "digest-unique",
+      "capabilities": ["completion", "tools"],
+      "details": {"parameter_size": "7B"},
+      "modified_at": "2026-01-03T00:00:00Z"
+    },
+    {
+      "name": "nomic-embed-text:v1.5",
+      "digest": "digest-nomic",
+      "capabilities": ["embedding"],
+      "details": {"parameter_size": "137M"}
+    },
+    {
+      "name": "nomic-embed-text:latest",
+      "digest": "digest-nomic",
+      "capabilities": ["embedding"],
+      "details": {"parameter_size": "137M"}
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import argparse
 import json
 import re
 import sys
+from pathlib import Path
 from typing import Any
 
 SKIP_NEEDLES = (
@@ -113,7 +114,59 @@ def is_fast(name: str, details: dict[str, Any], capabilities: list[str]) -> bool
     return pb is not None and pb <= 9.0
 
 
-def load_models(tags: dict[str, Any]) -> list[dict[str, Any]]:
+def name_rank(name: str) -> tuple:
+    """Lower is better when the user has no existing name to keep."""
+    tag = name.rsplit(":", 1)[-1]
+    latest = 0 if tag == "latest" else 1
+    return (latest, len(name), name)
+
+
+def _group_key(m: dict[str, Any]) -> tuple:
+    digest = (m.get("digest") or "").strip()
+    if digest:
+        return ("d", digest)
+    return ("n", m["name"])
+
+
+def dedupe_models(
+    models: list[dict[str, Any]],
+    preferred: list[str] | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    """One row per digest (or exact name). Keep a name the user already uses."""
+    preferred = [n for n in (preferred or []) if n]
+    groups: dict[tuple, list[dict[str, Any]]] = {}
+    order: list[tuple] = []
+    for m in models:
+        key = _group_key(m)
+        if key not in groups:
+            groups[key] = []
+            order.append(key)
+        groups[key].append(m)
+
+    out: list[dict[str, Any]] = []
+    aliases: dict[str, str] = {}
+    for key in order:
+        group = groups[key]
+        names = [x["name"] for x in group]
+        winner_name = None
+        for p in preferred:
+            if p in names:
+                winner_name = p
+                break
+        if winner_name is None:
+            winner_name = min(names, key=name_rank)
+        winner = next(x for x in group if x["name"] == winner_name)
+        out.append(winner)
+        for n in names:
+            if n != winner_name:
+                aliases[n] = winner_name
+    return out, aliases
+
+
+def load_models(
+    tags: dict[str, Any],
+    preferred: list[str] | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
     out = []
     for m in tags.get("models") or []:
         name = m.get("name") or m.get("model") or m.get("id")
@@ -121,9 +174,13 @@ def load_models(tags: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         caps = list(m.get("capabilities") or [])
         details = m.get("details") or {}
+        digest = m.get("digest") or m.get("id") or ""
+        if isinstance(digest, str) and digest.startswith("sha256:"):
+            digest = digest[len("sha256:") :]
         out.append(
             {
                 "name": name,
+                "digest": digest if isinstance(digest, str) else "",
                 "capabilities": caps,
                 "details": details,
                 "size": m.get("size") or 0,
@@ -136,7 +193,7 @@ def load_models(tags: dict[str, Any]) -> list[dict[str, Any]]:
                 "tools": "tools" in {c.lower() for c in caps},
             }
         )
-    return out
+    return dedupe_models(out, preferred)
 
 
 def completion_models(models: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -287,8 +344,9 @@ def classify_payload(
     overrides: dict[str, str] | None = None,
     junie_primary: str | None = None,
     default_model: str | None = None,
+    preferred: list[str] | None = None,
 ) -> dict[str, Any]:
-    models = load_models(tags)
+    models, aliases = load_models(tags, preferred)
     comp = completion_models(models)
     ov = dict(overrides or {})
     if default_model and "sonnet" not in ov:
@@ -313,11 +371,42 @@ def classify_payload(
         "total": len(models),
         "completion": [m["name"] for m in comp],
         "skip": [m["name"] for m in models if m["skip"]],
+        "aliases": aliases,
         "roles": roles,
         "junie_primary": primary or "",
         "junie_local": roles["opus"] or roles["sonnet"],
         "models": models,
     }
+
+
+def gather_prefer_names(
+    claude: str | None = None,
+    junie_dir: str | None = None,
+    grok: str | None = None,
+) -> list[str]:
+    names: list[str] = []
+    if claude and Path(claude).is_file():
+        try:
+            am = json.loads(Path(claude).read_text(encoding="utf-8")).get("availableModels") or []
+        except (OSError, json.JSONDecodeError):
+            am = []
+        names.extend(n for n in am if isinstance(n, str))
+    if junie_dir and Path(junie_dir).is_dir():
+        for p in sorted(Path(junie_dir).glob("*.json")):
+            try:
+                mid = json.loads(p.read_text(encoding="utf-8")).get("id")
+            except (OSError, json.JSONDecodeError):
+                continue
+            if isinstance(mid, str):
+                names.append(mid)
+    if grok and Path(grok).is_file():
+        try:
+            text = Path(grok).read_text(encoding="utf-8")
+        except OSError:
+            text = ""
+        for m in re.finditer(r'^\s*model\s*=\s*"([^"]+)"', text, re.M):
+            names.append(m.group(1))
+    return names
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -334,7 +423,17 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--fable-model")
     c.add_argument("--default-model")
     c.add_argument("--junie-primary")
+    c.add_argument("--prefer-names", help="JSON list of names already in the user's config")
+    g = sub.add_parser("gather-names")
+    g.add_argument("--claude")
+    g.add_argument("--junie-dir")
+    g.add_argument("--grok")
+    g.add_argument("--out", required=True)
     args = p.parse_args(argv)
+    if args.cmd == "gather-names":
+        names = gather_prefer_names(args.claude, args.junie_dir, args.grok)
+        Path(args.out).write_text(json.dumps(names) + "\n", encoding="utf-8")
+        return 0
     if args.cmd == "classify":
         tags = json.loads(open(args.tags, encoding="utf-8").read())
         ov = {}
@@ -346,6 +445,9 @@ def main(argv: list[str] | None = None) -> int:
             ov["opus"] = args.opus_model
         if args.fable_model:
             ov["fable"] = args.fable_model
+        preferred = None
+        if args.prefer_names:
+            preferred = json.loads(open(args.prefer_names, encoding="utf-8").read())
         payload = classify_payload(
             tags,
             prefer_cloud=args.prefer_cloud,
@@ -353,11 +455,13 @@ def main(argv: list[str] | None = None) -> int:
             overrides=ov,
             junie_primary=args.junie_primary,
             default_model=args.default_model,
+            preferred=preferred,
         )
         slim = {
             "total": payload["total"],
             "completion": payload["completion"],
             "skip": payload["skip"],
+            "aliases": payload["aliases"],
             "roles": payload["roles"],
             "junie_primary": payload["junie_primary"],
             "junie_local": payload["junie_local"],

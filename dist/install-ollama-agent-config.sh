@@ -21,6 +21,7 @@ import argparse
 import json
 import re
 import sys
+from pathlib import Path
 from typing import Any
 
 SKIP_NEEDLES = (
@@ -128,7 +129,59 @@ def is_fast(name: str, details: dict[str, Any], capabilities: list[str]) -> bool
     return pb is not None and pb <= 9.0
 
 
-def load_models(tags: dict[str, Any]) -> list[dict[str, Any]]:
+def name_rank(name: str) -> tuple:
+    """Lower is better when the user has no existing name to keep."""
+    tag = name.rsplit(":", 1)[-1]
+    latest = 0 if tag == "latest" else 1
+    return (latest, len(name), name)
+
+
+def _group_key(m: dict[str, Any]) -> tuple:
+    digest = (m.get("digest") or "").strip()
+    if digest:
+        return ("d", digest)
+    return ("n", m["name"])
+
+
+def dedupe_models(
+    models: list[dict[str, Any]],
+    preferred: list[str] | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    """One row per digest (or exact name). Keep a name the user already uses."""
+    preferred = [n for n in (preferred or []) if n]
+    groups: dict[tuple, list[dict[str, Any]]] = {}
+    order: list[tuple] = []
+    for m in models:
+        key = _group_key(m)
+        if key not in groups:
+            groups[key] = []
+            order.append(key)
+        groups[key].append(m)
+
+    out: list[dict[str, Any]] = []
+    aliases: dict[str, str] = {}
+    for key in order:
+        group = groups[key]
+        names = [x["name"] for x in group]
+        winner_name = None
+        for p in preferred:
+            if p in names:
+                winner_name = p
+                break
+        if winner_name is None:
+            winner_name = min(names, key=name_rank)
+        winner = next(x for x in group if x["name"] == winner_name)
+        out.append(winner)
+        for n in names:
+            if n != winner_name:
+                aliases[n] = winner_name
+    return out, aliases
+
+
+def load_models(
+    tags: dict[str, Any],
+    preferred: list[str] | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
     out = []
     for m in tags.get("models") or []:
         name = m.get("name") or m.get("model") or m.get("id")
@@ -136,9 +189,13 @@ def load_models(tags: dict[str, Any]) -> list[dict[str, Any]]:
             continue
         caps = list(m.get("capabilities") or [])
         details = m.get("details") or {}
+        digest = m.get("digest") or m.get("id") or ""
+        if isinstance(digest, str) and digest.startswith("sha256:"):
+            digest = digest[len("sha256:") :]
         out.append(
             {
                 "name": name,
+                "digest": digest if isinstance(digest, str) else "",
                 "capabilities": caps,
                 "details": details,
                 "size": m.get("size") or 0,
@@ -151,7 +208,7 @@ def load_models(tags: dict[str, Any]) -> list[dict[str, Any]]:
                 "tools": "tools" in {c.lower() for c in caps},
             }
         )
-    return out
+    return dedupe_models(out, preferred)
 
 
 def completion_models(models: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -302,8 +359,9 @@ def classify_payload(
     overrides: dict[str, str] | None = None,
     junie_primary: str | None = None,
     default_model: str | None = None,
+    preferred: list[str] | None = None,
 ) -> dict[str, Any]:
-    models = load_models(tags)
+    models, aliases = load_models(tags, preferred)
     comp = completion_models(models)
     ov = dict(overrides or {})
     if default_model and "sonnet" not in ov:
@@ -328,11 +386,42 @@ def classify_payload(
         "total": len(models),
         "completion": [m["name"] for m in comp],
         "skip": [m["name"] for m in models if m["skip"]],
+        "aliases": aliases,
         "roles": roles,
         "junie_primary": primary or "",
         "junie_local": roles["opus"] or roles["sonnet"],
         "models": models,
     }
+
+
+def gather_prefer_names(
+    claude: str | None = None,
+    junie_dir: str | None = None,
+    grok: str | None = None,
+) -> list[str]:
+    names: list[str] = []
+    if claude and Path(claude).is_file():
+        try:
+            am = json.loads(Path(claude).read_text(encoding="utf-8")).get("availableModels") or []
+        except (OSError, json.JSONDecodeError):
+            am = []
+        names.extend(n for n in am if isinstance(n, str))
+    if junie_dir and Path(junie_dir).is_dir():
+        for p in sorted(Path(junie_dir).glob("*.json")):
+            try:
+                mid = json.loads(p.read_text(encoding="utf-8")).get("id")
+            except (OSError, json.JSONDecodeError):
+                continue
+            if isinstance(mid, str):
+                names.append(mid)
+    if grok and Path(grok).is_file():
+        try:
+            text = Path(grok).read_text(encoding="utf-8")
+        except OSError:
+            text = ""
+        for m in re.finditer(r'^\s*model\s*=\s*"([^"]+)"', text, re.M):
+            names.append(m.group(1))
+    return names
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -349,7 +438,17 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--fable-model")
     c.add_argument("--default-model")
     c.add_argument("--junie-primary")
+    c.add_argument("--prefer-names", help="JSON list of names already in the user's config")
+    g = sub.add_parser("gather-names")
+    g.add_argument("--claude")
+    g.add_argument("--junie-dir")
+    g.add_argument("--grok")
+    g.add_argument("--out", required=True)
     args = p.parse_args(argv)
+    if args.cmd == "gather-names":
+        names = gather_prefer_names(args.claude, args.junie_dir, args.grok)
+        Path(args.out).write_text(json.dumps(names) + "\n", encoding="utf-8")
+        return 0
     if args.cmd == "classify":
         tags = json.loads(open(args.tags, encoding="utf-8").read())
         ov = {}
@@ -361,6 +460,9 @@ def main(argv: list[str] | None = None) -> int:
             ov["opus"] = args.opus_model
         if args.fable_model:
             ov["fable"] = args.fable_model
+        preferred = None
+        if args.prefer_names:
+            preferred = json.loads(open(args.prefer_names, encoding="utf-8").read())
         payload = classify_payload(
             tags,
             prefer_cloud=args.prefer_cloud,
@@ -368,11 +470,13 @@ def main(argv: list[str] | None = None) -> int:
             overrides=ov,
             junie_primary=args.junie_primary,
             default_model=args.default_model,
+            preferred=preferred,
         )
         slim = {
             "total": payload["total"],
             "completion": payload["completion"],
             "skip": payload["skip"],
+            "aliases": payload["aliases"],
             "roles": payload["roles"],
             "junie_primary": payload["junie_primary"],
             "junie_local": payload["junie_local"],
@@ -468,16 +572,24 @@ def _dump(obj: object) -> str:
     return json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
 
 
-def stable_merge_available(existing: list, completion: list[str], skip: list[str]) -> list[str]:
+def stable_merge_available(
+    existing: list,
+    completion: list[str],
+    skip: list[str],
+    collapsed: dict[str, str] | None = None,
+) -> list[str]:
     alias_set = set(ALIASES)
     skip_set = set(skip)
     completion_set = set(completion)
+    collapsed = collapsed or {}
     out: list[str] = list(ALIASES)
     seen = set(out)
     for name in existing:
         if not isinstance(name, str):
             continue
         if name in alias_set:
+            continue
+        if name in collapsed:
             continue
         if name in skip_set or is_skip(name, []):
             continue
@@ -486,7 +598,7 @@ def stable_merge_available(existing: list, completion: list[str], skip: list[str
                 out.append(name)
                 seen.add(name)
     for name in completion:
-        if name not in seen and name not in alias_set:
+        if name not in seen and name not in alias_set and name not in collapsed:
             out.append(name)
             seen.add(name)
     return out
@@ -502,7 +614,10 @@ def merge_claude(existing: dict, env_updates: dict, models: dict) -> dict:
     if not isinstance(prev, list):
         prev = []
     out["availableModels"] = stable_merge_available(
-        prev, models.get("completion") or [], models.get("skip") or []
+        prev,
+        models.get("completion") or [],
+        models.get("skip") or [],
+        models.get("aliases") or {},
     )
     return out
 
@@ -602,24 +717,35 @@ def cmd_merge_junie_config(args) -> int:
 
 def cmd_write_junie_all(args) -> int:
     tags = json.loads(Path(args.tags).read_text(encoding="utf-8"))
-    cls = json.loads(Path(args.models_json).read_text(encoding="utf-8"))
-    models = load_models(tags)
+    dest = Path(args.models_dir)
+    dest.mkdir(parents=True, exist_ok=True)
+    existing_ids = []
+    for p in dest.glob("*.json"):
+        try:
+            mid = json.loads(p.read_text(encoding="utf-8")).get("id")
+        except (OSError, json.JSONDecodeError):
+            continue
+        if isinstance(mid, str):
+            existing_ids.append(mid)
+    models, aliases = load_models(tags, existing_ids)
     from catalog import completion_models
 
     comp = completion_models(models)
-    dest = Path(args.models_dir)
-    dest.mkdir(parents=True, exist_ok=True)
     written = 0
-    for name in cls.get("completion") or []:
+    keep_files = {"ollama.json", "ollama-local.json"}
+    for row in comp:
+        name = row["name"]
         faster = faster_for_profile(name, args.haiku, comp)
-        merge_path = dest / (junie_slug(name) + ".json")
+        fname = junie_slug(name) + ".json"
+        keep_files.add(fname)
         _atomic_write(
-            merge_path,
+            dest / fname,
             _dump(merge_junie_profile({}, name, args.base_url, faster)),
             0o644,
         )
         written += 1
     for fname, mid in (("ollama.json", args.primary), ("ollama-local.json", args.local)):
+        mid = aliases.get(mid, mid)
         faster = faster_for_profile(mid, args.haiku, comp)
         _atomic_write(
             dest / fname,
@@ -627,6 +753,15 @@ def cmd_write_junie_all(args) -> int:
             0o644,
         )
         written += 1
+    for p in dest.glob("*.json"):
+        if p.name in keep_files:
+            continue
+        try:
+            mid = json.loads(p.read_text(encoding="utf-8")).get("id")
+        except (OSError, json.JSONDecodeError):
+            continue
+        if mid in aliases:
+            p.unlink()
     print(f"junie: rewrite {written} managed profiles")
     return 0
 
@@ -1426,7 +1561,16 @@ json.dump({"models":[{"name":n,"capabilities":[]} for n in names]}, open(sys.arg
 # --- BEGIN 30-classify.sh ---
 cba_classify() {
   CBA_CLASS="$CBA_WORKDIR/class.json"
+  CBA_PREF="$CBA_WORKDIR/prefer-names.json"
+  cba_py catalog.py gather-names \
+    --claude "${CBA_CLAUDE_SETTINGS:-$HOME/.claude/settings.json}" \
+    --junie-dir "${CBA_JUNIE_HOME:-$HOME/.junie}/models" \
+    --grok "${CBA_GROK_CONFIG:-$HOME/.grok/config.toml}" \
+    --out "$CBA_PREF" || true
   set -- classify --tags "$CBA_TAGS" --out "$CBA_CLASS"
+  if [ -s "$CBA_PREF" ]; then
+    set -- "$@" --prefer-names "$CBA_PREF"
+  fi
   if [ "$CBA_PREFER_CLOUD" -eq 1 ]; then
     set -- "$@" --prefer-cloud
   fi
@@ -1633,7 +1777,8 @@ from catalog import faster_for_profile, load_models, completion_models
 tags=json.load(open(sys.argv[2]))
 haiku=sys.argv[3]
 pid=sys.argv[4]
-comp=completion_models(load_models(tags))
+_models,_aliases=load_models(tags)
+comp=completion_models(_models)
 print(faster_for_profile(pid, haiku, comp))
 ' "${CBA_ROOT:-$CBA_WORKDIR}/lib" "$CBA_TAGS" "$CBA_ROLE_HAIKU" "$1"
 }
