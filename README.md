@@ -6,10 +6,6 @@ Configures **Claude Code**, **Junie**, and **Grok Build** to use your Ollama mod
 curl -fsSL https://raw.githubusercontent.com/revytechinc/ollama-agent-config/main/install.sh | sh
 ```
 
-That downloads the release script, checks its SHA-256, then runs it. Add flags after `sh -s --`, for example `--dry-run`.
-
-From a clone: `sh install.sh`.
-
 ## What it does
 
 - Discovers installed agents (Claude, Junie, Grok) unless you pass `--tools=`
